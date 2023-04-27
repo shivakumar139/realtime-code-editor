@@ -19,7 +19,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home/>}/>
-          <Route path="/editor/:id" element={<EditorPage/>}/>
+          <Route path="/editor/:roomId" element={<EditorPage/>}/>
         </Routes>
       </BrowserRouter>
     </>

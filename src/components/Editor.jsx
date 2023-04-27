@@ -1,15 +1,32 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
+import { ACTIONS } from '../socket/actions';
 
-function Editor() {
+function Editor({socketRef, code}) {
+
+  const [codeState, setCodeState] = useState();
+  useEffect(()=>{
+    setCodeState(code)
+    console.log("Code Change")
+  },[code])
+
+  console.log("Code: ", code)
+  socketRef.current?.on(ACTIONS.SYNC_CODE,({code})=>{
+    setCodeState(code)
+    console.log("SYNC_CODE: ", code)
+  })
+
   const onChange = useCallback((value, viewUpdate) => {
-    console.log('value:', value);
+
+    socketRef.current.emit(ACTIONS.CODE_CHANGE,{code: value})
+
+ 
   }, []);
 
   return (
     <CodeMirror
-      value="console.log('hello world!');"
+      value={codeState}
       height="100vh"
       extensions={[javascript({ jsx: true })]}
       onChange={onChange}
